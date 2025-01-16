@@ -1,5 +1,32 @@
-Условие задачи:
+Условие задачи: Случайные величины $X$ и $Y$ независимы и имеют нормальное распределение с математическим ожиданием $0$ и дисперсией $1$. Оценить $P(|X-Y|<=1)$ на основании $1000$ выборочных значений пар $(x_{i}, y_{i})$, $i=1,...,1000$.
 
 Решение задачи (листинг):
+
+\begin{minted}{python}
+import numpy as np
+from scipy.integrate import solve_ivp
+import matplotlib.pyplot as plt
+
+# Параметры нормального распределения
+mean = 0
+std_dev = 1
+
+# Количество выборочных значений
+n_samples = 1000
+
+# Генерация выборок для X и Y
+X = np.random.normal(mean, std_dev, n_samples)
+Y = np.random.normal(mean, std_dev, n_samples)
+
+# Вычисление |X - Y| и подсчет случаев, удовлетворяющих условию
+absolute_differences = np.abs(X - Y)
+success_count = np.sum(absolute_differences <= 1)
+
+# Оценка вероятности
+probability_estimate = success_count / n_samples
+
+# Вывод результата
+print(f"Оценка вероятности P(|X - Y| <= 1): {probability_estimate:.4f}")
+\end{minted}
 
 Вывод:

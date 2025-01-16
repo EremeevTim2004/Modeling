@@ -1,5 +1,35 @@
-Условие задачи:
+Условие задачи: Оценить интеграл $I = \int^{\pi}_{0}\sin{x*dx}$ (как показывают элементарные вычисления ), используя метод статистических испытаний, при объемах выборки $n = 10, 20, 50, 100, 1000, 10000$.
 
 Решение задачи (листинг):
+
+\begin{minted}{python}
+import numpy as np
+from scipy.integrate import solve_ivp
+import matplotlib.pyplot as plt
+
+# Функция, подлежащая интегрированию
+def f(x):
+    return np.sin(x)
+
+# Пределы интегрирования
+a, b = 0, np.pi
+
+# Объемы выборки для метода Монте-Карло
+sample_sizes = [10, 20, 50, 100, 1000, 10000]
+
+# Вычисление интеграла методом Монте-Карло
+results = []
+for n in sample_sizes:
+    # Генерация случайных точек в пределах интегрирования
+    x_samples = np.random.uniform(a, b, n)
+    # Оценка интеграла
+    integral_estimate = (b - a) * np.mean(f(x_samples))
+    results.append((n, integral_estimate))
+
+# Вывод результатов
+print("Результаты вычисления интеграла методом Монте-Карло:")
+for n, estimate in results:
+    print(f"n = {n}: I ≈ {estimate:.6f}")
+\end{minted}
 
 Вывод:
