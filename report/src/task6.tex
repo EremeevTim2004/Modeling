@@ -4,8 +4,6 @@
 
 \begin{minted}{python}
 import numpy as np
-from scipy.integrate import solve_ivp
-import matplotlib.pyplot as plt
 
 # Параметры задачи
 mean_interval = 15  # Средний интервал между трамваями (в минутах)
@@ -17,26 +15,27 @@ waiting_times = []
 for _ in range(n_trials):
     # Момент прихода пассажира (в минутах с начала суток)
     passenger_arrival = np.random.uniform(0, 1440)  # 1440 минут в сутках
-
     # Генерация интервалов между трамваями в течение суток
     tram_arrivals = [0]
     while tram_arrivals[-1] < 1440:
         tram_arrivals.append(tram_arrivals[-1] + np.random.exponential(scale=mean_interval))
-
     # Удаляем последний элемент, если он больше 1440 минут
     tram_arrivals = np.array(tram_arrivals[:-1])
-
-    # Находим время ожидания
-    next_tram = tram_arrivals[tram_arrivals >= passenger_arrival].min()
-    waiting_time = next_tram - passenger_arrival
+    # Проверка на наличие следующего трамвая
+    next_trams = tram_arrivals[tram_arrivals >= passenger_arrival]
+    if next_trams.size == 0:  # Если массив пуст, возвращаемся к первому трамваю следующего дня
+        waiting_time = 1440 - passenger_arrival + tram_arrivals[0]
+    else:
+        waiting_time = next_trams.min() - passenger_arrival
     waiting_times.append(waiting_time)
 
 # Оценка математического ожидания времени ожидания
 expected_waiting_time = np.mean(waiting_times)
-
 # Вывод результата
 print(f"Оценка математического ожидания времени ожидания (\u0394): {expected_waiting_time:.2f} минут")
-
 \end{minted}
 
 Вывод:
+\begin{minted}{shell}
+    ценка математического ожидания времени ожидания (Δ): 14.99 минут
+\end{minted}
